@@ -1,0 +1,17 @@
+﻿<Window x:Class="Iaiot_Studio__1._0._0_Alpha.GuideWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Iaiot_Studio__1._0._0_Alpha"
+        mc:Ignorable="d"
+        Title="IAIOT Studio 2020" Height="480" Width="850" WindowStyle="None" AllowsTransparency="True" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <Grid>
+        <Image Source="./Image/guideimage.jpg" Stretch="UniformToFill"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label Foreground="White" FontSize="60">IAIOT      Studio</Label>
+            <Label Foreground="White" FontSize="40" HorizontalAlignment="Center">2020</Label>
+        </StackPanel>
+        <Label VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="White" FontSize="14">Version:1.0.0-alpha</Label>
+    </Grid>
+</Window>

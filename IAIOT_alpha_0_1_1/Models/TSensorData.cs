@@ -15,5 +15,6 @@ namespace IAIOT_alpha_0_1_1.Models
         public int? DataType { get; set; }
         public string SensorTag { get; set; }
         public DateTime? CreateDate { get; set; }
+        public int? ProjectId { get; set; }
     }
 }

@@ -314,6 +314,19 @@ namespace IAIOT_alpha_0_1_1.DataListeningService
                         string info = Encoding.UTF8.GetString(data);
                         Console.WriteLine("收到 {0} 数据为 {1}", socket.RemoteEndPoint.ToString(), info);
                         //TODO：deal the receive datas
+                        TSensorData gas = new TSensorData()
+                        {
+                            CreateDate = currentTime,
+                            SensorData = info.Substring(0, 4) + "PPM",
+                            SensorUnit = "PPM",
+                            SensorName = "可燃气体传感器",
+                            DeviceId = 2,
+                            SensorId = 7,
+                            SensorTag = "data_gas",
+                            DeviceName = "数据采集网关",
+                            DataType = 1,
+                            ProjectId = 1
+                        };
                         TSensorData temp = new TSensorData()
                         {
                             CreateDate = currentTime,
@@ -324,7 +337,8 @@ namespace IAIOT_alpha_0_1_1.DataListeningService
                             SensorId = 1,
                             SensorTag = "data_temp",
                             DeviceName = "数据采集网关",
-                            DataType = 1
+                            DataType = 1,
+                            ProjectId = 1
                         };
                         TSensorData humi = new TSensorData()
                         {
@@ -333,18 +347,26 @@ namespace IAIOT_alpha_0_1_1.DataListeningService
                             SensorUnit = "%",
                             SensorName = "湿度传感器",
                             DeviceId = 2,
-                            SensorId = 1,
+                            SensorId = 2,
                             SensorTag = "data_humi",
                             DeviceName = "数据采集网关",
-                            DataType = 1
+                            DataType = 1,
+                            ProjectId =1
                         };
                         Task.Run(new Action(() =>
                         {
-                            TSensorData[] datas = { temp, humi };
+                            TSensorData[] datas = { temp, humi, gas };
                             context.TSensorData.AddRangeAsync(datas);
-                            if (context.SaveChanges() > 0)
+                            try
                             {
-                                Console.WriteLine("data save keep container successful!");
+                                if (context.SaveChangesAsync().Result > 0)
+                                {
+                                    Console.WriteLine("data save keep container successful!");
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                //throw;
                             }
                         }));
                     }

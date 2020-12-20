@@ -39,6 +39,11 @@ namespace IAIOT_alpha_0_1_1.Services
             return await _context.TSensors.Where(a => a.CtrUserId == userId).ToListAsync();
         }
 
+        public async Task<List<TSensors>> FindAllSensorsByDevicetId(int deviceId)
+        {
+            return await _context.TSensors.Where(a => a.DeviceId == deviceId).ToListAsync();
+        }
+
         public async Task<List<TSensors>> FindAllSensorsByProjectId(int projectId)
         {
             return await _context.TSensors.Where(a => a.ProjectId == projectId).ToListAsync();

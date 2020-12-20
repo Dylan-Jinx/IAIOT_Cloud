@@ -312,63 +312,165 @@ namespace IAIOT_alpha_0_1_1.DataListeningService
                         byte[] data = new byte[e.BytesTransferred];
                         Array.Copy(e.Buffer, e.Offset, data, 0, data.Length);
                         string info = Encoding.UTF8.GetString(data);
-                        Console.WriteLine("收到 {0} 数据为 {1}", socket.RemoteEndPoint.ToString(), info);
                         //TODO：deal the receive datas
-                        TSensorData gas = new TSensorData()
+
+                        if(info.Substring(0,1) == "x")
                         {
-                            CreateDate = currentTime,
-                            SensorData = info.Substring(0, 4) + "PPM",
-                            SensorUnit = "PPM",
-                            SensorName = "可燃气体传感器",
-                            DeviceId = 2,
-                            SensorId = 7,
-                            SensorTag = "data_gas",
-                            DeviceName = "数据采集网关",
-                            DataType = 1,
-                            ProjectId = 1
-                        };
-                        TSensorData temp = new TSensorData()
-                        {
-                            CreateDate = currentTime,
-                            SensorData = info.Substring(4, 2) + "℃",
-                            SensorUnit = "℃",
-                            SensorName = "温度传感器",
-                            DeviceId = 2,
-                            SensorId = 1,
-                            SensorTag = "data_temp",
-                            DeviceName = "数据采集网关",
-                            DataType = 1,
-                            ProjectId = 1
-                        };
-                        TSensorData humi = new TSensorData()
-                        {
-                            CreateDate = currentTime,
-                            SensorData = info.Substring(6) + "%",
-                            SensorUnit = "%",
-                            SensorName = "湿度传感器",
-                            DeviceId = 2,
-                            SensorId = 2,
-                            SensorTag = "data_humi",
-                            DeviceName = "数据采集网关",
-                            DataType = 1,
-                            ProjectId =1
-                        };
-                        Task.Run(new Action(() =>
-                        {
-                            TSensorData[] datas = { temp, humi, gas };
-                            context.TSensorData.AddRangeAsync(datas);
-                            try
+                            Console.WriteLine("收到 {0} 模拟数据为 {1}", socket.RemoteEndPoint.ToString(), "项目ID：" + info.Substring(1, 2) + " 温度：" + info.Substring(3, 2) + " 湿度：" + info.Substring(5, 2) + " 噪音：" + info.Substring(7, 2) + " 可燃气体：" + info.Substring(9, 4) + " 光照：" + info.Substring(13, 4));
+                            int projId = int.Parse(info.Substring(1, 2));
+                            TSensorData gasx = new TSensorData()
                             {
-                                if (context.SaveChangesAsync().Result > 0)
+                                CreateDate = currentTime,
+                                SensorData = info.Substring(9, 4) + "PPM",
+                                SensorUnit = "PPM",
+                                SensorName = "可燃气体传感器",
+                                DeviceId = 2,
+                                SensorId = 7,
+                                SensorTag = "data_gas",
+                                DeviceName = "模拟数据生成器",
+                                DataType = 1,
+                                ProjectId = projId
+                            };
+                            TSensorData tempx = new TSensorData()
+                            {
+                                CreateDate = currentTime,
+                                SensorData = info.Substring(3, 2) + "℃",
+                                SensorUnit = "℃",
+                                SensorName = "温度传感器",
+                                DeviceId = 2,
+                                SensorId = 1,
+                                SensorTag = "data_temp",
+                                DeviceName = "模拟数据生成器",
+                                DataType = 1,
+                                ProjectId = projId
+                            };
+                            TSensorData humix = new TSensorData()
+                            {
+                                CreateDate = currentTime,
+                                SensorData = info.Substring(5,2) + "%",
+                                SensorUnit = "%",
+                                SensorName = "湿度传感器",
+                                DeviceId = 2,
+                                SensorId = 2,
+                                SensorTag = "data_humi",
+                                DeviceName = "模拟数据生成器",
+                                DataType = 1,
+                                ProjectId = projId
+                            };
+                            TSensorData lxx = new TSensorData()
+                            {
+                                CreateDate = currentTime,
+                                SensorData = new Random().Next(200, 2800) + "lx",
+                                SensorUnit = "lx",
+                                SensorName = "光照传感器",
+                                DeviceId = 2,
+                                SensorId = 3,
+                                SensorTag = "data_lx",
+                                DeviceName = "模拟数据生成器",
+                                DataType = 1,
+                                ProjectId = projId
+                            };
+                            TSensorData voicex = new TSensorData()
+                            {
+                                CreateDate = currentTime,
+                                SensorData = info.Substring(7,2) + "db",
+                                SensorUnit = "db",
+                                SensorName = "噪音传感器",
+                                DeviceId = 2,
+                                SensorId = 4,
+                                SensorTag = "data_voice",
+                                DeviceName = "模拟数据生成器",
+                                DataType = 1,
+                                ProjectId = projId
+                            };
+                            TSensorData wind_speedx = new TSensorData()
+                            {
+                                CreateDate = currentTime,
+                                SensorData = new Random().Next(0, 60) + "m/s",
+                                SensorUnit = "m/s",
+                                SensorName = "风速传感器",
+                                DeviceId = 2,
+                                SensorId = 10,
+                                SensorTag = "data_windspeed",
+                                DeviceName = "模拟数据生成器",
+                                DataType = 1,
+                                ProjectId = projId
+                            };
+                            Task.Run(new Action(() =>
+                            {
+                                TSensorData[] datas = { tempx, humix, gasx, lxx, wind_speedx, voicex };
+                                context.TSensorData.AddRangeAsync(datas);
+                                try
                                 {
-                                    Console.WriteLine("data save keep container successful!");
+                                    if (context.SaveChangesAsync().Result > 0)
+                                    {
+                                        Console.WriteLine("data save keep container successful!");
+                                    }
                                 }
-                            }
-                            catch (Exception)
+                                catch (Exception)
+                                {
+                                    //throw;
+                                }
+                            }));
+                        }
+                        else
+                        {
+                            TSensorData gas = new TSensorData()
                             {
-                                //throw;
-                            }
-                        }));
+                                CreateDate = currentTime,
+                                SensorData = info.Substring(0, 4) + "PPM",
+                                SensorUnit = "PPM",
+                                SensorName = "可燃气体传感器",
+                                DeviceId = 2,
+                                SensorId = 7,
+                                SensorTag = "data_gas",
+                                DeviceName = "数据采集网关",
+                                DataType = 1,
+                                ProjectId = 1
+                            };
+                            TSensorData temp = new TSensorData()
+                            {
+                                CreateDate = currentTime,
+                                SensorData = info.Substring(4, 2) + "℃",
+                                SensorUnit = "℃",
+                                SensorName = "温度传感器",
+                                DeviceId = 2,
+                                SensorId = 1,
+                                SensorTag = "data_temp",
+                                DeviceName = "数据采集网关",
+                                DataType = 1,
+                                ProjectId = 1
+                            };
+                            TSensorData humi = new TSensorData()
+                            {
+                                CreateDate = currentTime,
+                                SensorData = info.Substring(6) + "%",
+                                SensorUnit = "%",
+                                SensorName = "湿度传感器",
+                                DeviceId = 2,
+                                SensorId = 2,
+                                SensorTag = "data_humi",
+                                DeviceName = "数据采集网关",
+                                DataType = 1,
+                                ProjectId = 1
+                            };
+                            Task.Run(new Action(() =>
+                            {
+                                TSensorData[] datas = { temp, humi, gas };
+                                context.TSensorData.AddRangeAsync(datas);
+                                try
+                                {
+                                    if (context.SaveChangesAsync().Result > 0)
+                                    {
+                                        Console.WriteLine("data save keep container successful!");
+                                    }
+                                }
+                                catch (Exception)
+                                {
+                                    //throw;
+                                }
+                            }));
+                        }
                     }
 
                     if (!socket.ReceiveAsync(e))

@@ -101,5 +101,24 @@ namespace IAIOT_alpha_0_1_1.Controllers
             }
             return BadRequest();
         }
+
+
+        [HttpGet("DeviceId")]
+        public async Task<IActionResult> getSensorByProjectId(int deviceId)
+        {
+            if (ModelState.IsValid)
+            {
+                List<TSensors> sensors= await _sensorService.FindAllSensorsByDevicetId(deviceId);
+                if (sensors.Count> 0 )
+                {
+                    return Ok(new ResponseCtrMsg<List<TSensors>>(CtrResult.Success) { ResultObj = sensors });
+                }
+                else
+                {
+                    return Ok(new ResponseCtrMsg<List<TSensors>>(CtrResult.Failure) { ResultObj = null });
+                }
+            }
+            return BadRequest();
+        }
     }
 }

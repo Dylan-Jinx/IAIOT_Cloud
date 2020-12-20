@@ -120,6 +120,8 @@ namespace IAIOT_alpha_0_1_1
                 c.RoutePrefix = string.Empty;
             });
 
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseAuthorization();

@@ -94,80 +94,120 @@ namespace IAIOT_alpha_0_1_1.Controllers
         /// </summary>
         /// <param name="projectId">1</param>
         /// <returns></returns>
-        [HttpGet("getSensorDataCountByProjectId")]
-        public async Task<IActionResult> getSensorDataCountByProjectId(int projectId)
+        [HttpPost("getSensorDataCountByProjectId")]
+        public async Task<IActionResult> getSensorDataCountByProjectId(List<int> projectId)
         {
-            ResponseCtrMsg<int> response;
-            var result = await _context.TSensorData.Where(a => a.ProjectId == projectId).CountAsync();
-            if (result > 0)
+            ResponseCtrMsg<List<KeyValuePair<int, int>>> response;
+            List<KeyValuePair<int, int>> sensorDataCountInfoList = new List<KeyValuePair<int, int>>();
+            foreach (var temp in projectId)
             {
-                response = new ResponseCtrMsg<int>(Enums.CtrResult.Success)
+                var result = await _context.TSensorData.Where(a => a.ProjectId == temp).CountAsync();
+                KeyValuePair<int, int> keyValuePair = new KeyValuePair<int, int>(temp, result);
+                sensorDataCountInfoList.Add(keyValuePair);
+            }
+            if (sensorDataCountInfoList.Count > 0)
+            {
+                response = new ResponseCtrMsg<List<KeyValuePair<int, int>>>(Enums.CtrResult.Success)
                 {
-                    ResultObj = result
+                    ResultObj = sensorDataCountInfoList
                 };
             }
             else
             {
-                response = new ResponseCtrMsg<int>(Enums.CtrResult.Failure)
+                response = new ResponseCtrMsg<List<KeyValuePair<int, int>>>(Enums.CtrResult.Failure)
                 {
-                    ResultObj = 0
+                    ResultObj = null
                 };
             }
             return await Task.FromResult<IActionResult>(Ok(response));
         }
 
         /// <summary>
-        /// 获取设备上报数据数量
+        /// 获取设备数量
         /// </summary>
         /// <param name="projectId">1</param>
         /// <returns></returns>
-        [HttpGet("getDeviceCountByProjectId")]
-        public async Task<IActionResult> getDeviceCountByProjectId(int projectId)
+        [HttpPost("getDeviceCountByProjectId")]
+        public async Task<IActionResult> getDeviceCountByProjectId(List<int> projectId)
         {
-            ResponseCtrMsg<int> response;
-            var result = await _context.TDevices.Where(a => a.ProjectId == projectId).CountAsync();
-            if (result > 0)
+            ResponseCtrMsg<List<KeyValuePair<int, int>>> response;
+            List<KeyValuePair<int, int>> deviceCountInfoList = new List<KeyValuePair<int, int>>();
+            foreach(var temp in projectId)
             {
-                response = new ResponseCtrMsg<int>(Enums.CtrResult.Success)
+                var result = await _context.TDevices.Where(a => a.ProjectId == temp).CountAsync();
+                KeyValuePair<int, int> keyValuePair = new KeyValuePair<int, int>(temp,result);
+                deviceCountInfoList.Add(keyValuePair);
+            }
+            if (deviceCountInfoList.Count > 0)
+            {
+                response = new ResponseCtrMsg<List<KeyValuePair<int, int>>>(Enums.CtrResult.Success)
                 {
-                    ResultObj = result
+                    ResultObj = deviceCountInfoList
                 };
             }
             else
             {
-                response = new ResponseCtrMsg<int>(Enums.CtrResult.Failure)
+                response = new ResponseCtrMsg<List<KeyValuePair<int, int>>>(Enums.CtrResult.Failure)
                 {
-                    ResultObj = 0
+                    ResultObj = null
                 };
             }
             return await Task.FromResult<IActionResult>(Ok(response));
         }
 
         /// <summary>
-        /// 获取设备上报数据数量
+        /// 获取设备信息
+        /// </summary>
+        /// <param name="projectId">1</param>
+        /// <returns></returns>
+        [HttpGet("getDeviceByProjectId")]
+        public async Task<IActionResult> getDeviceByProjectId(int projectId)
+        {
+            ResponseCtrMsg<List<TDevices>> response;
+            var result = await _context.TDevices.Where(a => a.ProjectId == projectId).ToListAsync();
+            if (result.Count > 0)
+            {
+                response = new ResponseCtrMsg<List<TDevices>>(Enums.CtrResult.Success)
+                {
+                    ResultObj = result
+                };
+            }
+            else
+            {
+                response = new ResponseCtrMsg<List<TDevices>>(Enums.CtrResult.Failure)
+                {
+                    ResultObj = null
+                };
+            }
+            return await Task.FromResult<IActionResult>(Ok(response));
+        }
+
+        /// <summary>
+        /// 获取传感器数量
         /// </summary>
         /// <param name="projectId">1</param>
         /// <returns></returns>
         [HttpPost("getSensorCountByProjectId")]
         public async Task<IActionResult> getSensorCountByProjectId(List<int> projectId)
         {
-            List<int> userProjectIdDeviceCount = new List<int>(); 
-            ResponseCtrMsg<List<int>> response;
-            foreach(var temp in projectId)
+            ResponseCtrMsg<List<KeyValuePair<int, int>>> response;
+            List<KeyValuePair<int, int>> deviceCountInfoList = new List<KeyValuePair<int, int>>();
+            foreach (var temp in projectId)
             {
                 var result = await _context.TSensors.Where(a => a.ProjectId == temp).CountAsync();
-                userProjectIdDeviceCount.Add(result);
+                KeyValuePair<int, int> keyValuePair = new KeyValuePair<int, int>(temp, result);
+                deviceCountInfoList.Add(keyValuePair);
             }
-            if (userProjectIdDeviceCount.Count > 0)
+            if (deviceCountInfoList.Count > 0)
             {
-                response = new ResponseCtrMsg<List<int>>(Enums.CtrResult.Success)
+                response = new ResponseCtrMsg<List<KeyValuePair<int, int>>>(Enums.CtrResult.Success)
                 {
-                    ResultObj = userProjectIdDeviceCount
+                    ResultObj = deviceCountInfoList
                 };
             }
             else
             {
-                response = new ResponseCtrMsg<List<int>>(Enums.CtrResult.Failure)
+                response = new ResponseCtrMsg<List<KeyValuePair<int, int>>>(Enums.CtrResult.Failure)
                 {
                     ResultObj = null
                 };
